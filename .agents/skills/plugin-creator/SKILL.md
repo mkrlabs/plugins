@@ -223,12 +223,19 @@ Recommended order:
 3. Assets: logo, composer icon, and screenshots. Ask the user to provide real assets or explicitly
    approve generating real replacement assets.
 4. Integration files: skills, hooks, `.app.json`, `.mcp.json`, and `agents/openai.yaml` metadata.
-5. Marketplace: add or update the selected marketplace entry when the plugin should be visible in
-   Codex.
+5. Marketplace: infer from location. Repo plugins under `<repo-root>/plugins/` should use
+   `<repo-root>/.agents/plugins/marketplace.json`; standalone plugins outside the repo should not
+   require marketplace work unless the user asks for it or passes `--marketplace-path`.
 
 Ask for one batch at a time instead of asking every checklist question at once. Use reasonable
 defaults only for low-risk implementation details. Do not invent publisher identity, legal URLs,
 auth policy, marketplace product gating, or user-provided assets without confirmation.
+
+When readiness issues remain, always make the next step explicit. After the checklist, ask one clear
+question for the highest-priority unresolved non-mechanical item instead of asking a broad question or
+starting with marketplace details. Prefer identity/copy issues first, then prompts, assets,
+integration metadata, and finally marketplace cleanup inferred from location. Example: `What should
+the plugin display name, one-sentence description, and publisher name be?`
 
 Do not satisfy readiness checks by replacing placeholders with dummy values. This applies to all
 manifest copy, prompts, logos, icons, screenshots, marketplace metadata, integration names, and skill
@@ -252,6 +259,9 @@ placeholder content, and label the result as not production-ready.
   grouped into blocking errors and review-worthy warnings.
 - Offer to walk through the remaining checklist interactively; if the user agrees, ask for one batch
   of values at a time, apply the answers, and rerun the readiness check after each pass.
+- Always ask the user one clear next question for the highest-priority unfinished readiness item.
+  Infer marketplace requirements from plugin location instead of making marketplace selection the
+  first or most important question.
 - Do not replace placeholders with dummy or generic values to make the checker pass. Ask for real
   values/assets, generate final-quality assets only with user approval, or leave the item unresolved.
 - If creating files inside an existing plugin path, use `--force` only when overwrite is intentional.
