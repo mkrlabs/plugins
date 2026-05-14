@@ -220,8 +220,8 @@ Recommended order:
 1. Identity and manifest copy: display name, description, author, homepage, repository, license,
    keywords, category, and capabilities.
 2. Interface metadata: brand color, starter prompts, website/privacy/terms URLs, and developer name.
-3. Assets: logo, composer icon, and screenshots. Ask the user to provide assets or permission to
-   create placeholders only when placeholders are acceptable for the current test.
+3. Assets: logo, composer icon, and screenshots. Ask the user to provide real assets or explicitly
+   approve generating real replacement assets.
 4. Integration files: skills, hooks, `.app.json`, `.mcp.json`, and `agents/openai.yaml` metadata.
 5. Marketplace: add or update the selected marketplace entry when the plugin should be visible in
    Codex.
@@ -229,6 +229,15 @@ Recommended order:
 Ask for one batch at a time instead of asking every checklist question at once. Use reasonable
 defaults only for low-risk implementation details. Do not invent publisher identity, legal URLs,
 auth policy, marketplace product gating, or user-provided assets without confirmation.
+
+Do not satisfy readiness checks by replacing placeholders with dummy values. This applies to all
+manifest copy, prompts, logos, icons, screenshots, marketplace metadata, integration names, and skill
+descriptions. If real values are unknown, ask the user for them or leave the checklist item open. For
+starter prompts, use confirmed plugin use cases; do not write generic prompts just to remove
+`[TODO: ...]`. For logos and icons, use real supplied assets or generated assets the user explicitly
+approves as final, not blank files, generic stand-ins, or fake brand marks. Only create dummy values
+when the user explicitly says they are building a test fixture or intentionally wants non-final
+placeholder content, and label the result as not production-ready.
 
 ## Required behavior
 
@@ -243,6 +252,8 @@ auth policy, marketplace product gating, or user-provided assets without confirm
   grouped into blocking errors and review-worthy warnings.
 - Offer to walk through the remaining checklist interactively; if the user agrees, ask for one batch
   of values at a time, apply the answers, and rerun the readiness check after each pass.
+- Do not replace placeholders with dummy or generic values to make the checker pass. Ask for real
+  values/assets, generate final-quality assets only with user approval, or leave the item unresolved.
 - If creating files inside an existing plugin path, use `--force` only when overwrite is intentional.
 - Preserve any existing marketplace `interface.displayName`.
 - When generating marketplace entries, always write `policy.installation`, `policy.authentication`, and `category` even if their values are defaults.
