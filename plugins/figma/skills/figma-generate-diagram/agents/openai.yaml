@@ -1,0 +1,4 @@
+interface:
+  display_name: "Generate Diagram"
+  short_description: "Create editable FigJam diagrams from Mermaid"
+  default_prompt: "Create an editable FigJam diagram from this flow, architecture, sequence, ERD, state, or Gantt description."

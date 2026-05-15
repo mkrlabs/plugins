@@ -1,0 +1,4 @@
+interface:
+  display_name: "FigJam"
+  short_description: "Use Figma tools safely in FigJam files"
+  default_prompt: "Create or edit a FigJam board using the FigJam-specific use_figma rules."

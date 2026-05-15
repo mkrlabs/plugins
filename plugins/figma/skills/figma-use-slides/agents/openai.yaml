@@ -1,0 +1,4 @@
+interface:
+  display_name: "Figma Slides"
+  short_description: "Use Figma tools safely in Slides files"
+  default_prompt: "Create or edit a Figma Slides deck using the Slides-specific use_figma rules."

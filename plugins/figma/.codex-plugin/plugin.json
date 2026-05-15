@@ -1,7 +1,7 @@
 {
   "name": "figma",
-  "version": "2.0.7",
-  "description": "Figma workflows for design implementation, Code Connect templates, and design system rule generation.",
+  "version": "2.2.0",
+  "description": "Figma workflows for design implementation, Code Connect templates, design system rules, FigJam diagrams, and Slides.",
   "author": {
     "name": "Figma",
     "url": "https://www.figma.com"
@@ -14,14 +14,17 @@
     "design-to-code",
     "ui-implementation",
     "code-connect",
-    "design-system"
+    "design-system",
+    "figjam",
+    "slides",
+    "diagrams"
   ],
   "skills": "./skills/",
   "apps": "./.app.json",
   "interface": {
     "displayName": "Figma",
-    "shortDescription": "Design-to-code workflows powered by the Figma integration",
-    "longDescription": "Figma workflows for implementing designs in code, creating Code Connect templates for published Figma components, and generating project-specific design system rules for repeatable Figma-to-code work.",
+    "shortDescription": "Design, Code Connect, FigJam, and Slides workflows powered by the Figma integration",
+    "longDescription": "Figma workflows for implementing designs in code, creating Code Connect templates for published Figma components, generating project-specific design system rules, and working with FigJam diagrams and Slides decks.",
     "developerName": "Figma",
     "category": "Design",
     "capabilities": [
@@ -35,7 +38,8 @@
     "defaultPrompt": [
       "Inspect a Figma design and implement it in code",
       "Create Code Connect templates for my components",
-      "Build or update a screen in Figma"
+      "Build or update a screen in Figma",
+      "Create a FigJam diagram or Slides deck"
     ],
     "brandColor": "#1ABCFE",
     "composerIcon": "./assets/figma.png",

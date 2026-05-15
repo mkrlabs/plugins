@@ -9,18 +9,23 @@ It currently includes these skills:
 - `figma-code-connect`
 - `figma-create-design-system-rules`
 - `figma-create-new-file`
+- `figma-generate-diagram`
 - `figma-generate-design`
 - `figma-generate-library`
+- `figma-use-figjam`
+- `figma-use-slides`
 - `figma-use`
 
 ## What It Covers
 
 - translating Figma frames and components into production-ready UI code
 - inspecting design context and screenshots through the connected Figma tools
-- creating parserless Code Connect template files for published Figma components
+- creating Code Connect template files for published Figma components
 - generating project-specific design system rules for Figma-to-code workflows
 - creating or updating full screens and design system libraries in Figma
 - creating new Figma or FigJam files when needed for a workflow
+- creating editable FigJam diagrams from Mermaid-backed diagram guidance
+- using Figma-specific rules for FigJam boards and Slides decks
 
 ## Plugin Structure
 
@@ -63,9 +68,10 @@ needed.
 The current skill set is focused on these workflows:
 
 - implementing designs from Figma with high visual fidelity
-- creating parserless Code Connect templates for published Figma components
+- creating Code Connect templates for published Figma components
 - generating durable project rules for future Figma-to-code work
-- creating or updating Figma files, screens, and design system libraries
+- creating or updating Figma files, screens, FigJam boards, Slides decks, and
+  design system libraries
 
 Use of the Figma skills and related files is governed by the Figma Developer
 Terms. See `LICENSE.txt` and the per-skill license files for details.

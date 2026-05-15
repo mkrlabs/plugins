@@ -1,9 +1,9 @@
 {
   "lockVersion": 1,
   "pluginId": "com.openai.figma",
-  "pluginVersion": "2.0.7",
+  "pluginVersion": "2.2.0",
   "generatedBy": "codex plugin pack (draft)",
-  "generatedAt": "2026-04-07T17:15:42Z",
+  "generatedAt": "2026-05-14T23:56:19Z",
   "skills": [
     {
       "id": "figma-code-connect",
@@ -12,9 +12,9 @@
         "type": "github",
         "repo": "figma/mcp-server-guide",
         "path": "skills/figma-code-connect",
-        "ref": "500e8738438ed1204eaf23e61280d872f47534fd"
+        "ref": "15599e7177ea9c605e750d865f28a5639ad6c891"
       },
-      "integrity": "sha256-ed5fbc2887dedc0924d798324433d4c2173a235d10d4115ef88d86e54a0d6aae"
+      "integrity": "sha256-7820b4087039887051c90ec9a5f1c958fa9636fb2802d7dd657883bc614a350f"
     },
     {
       "id": "figma-implement-design",
@@ -45,9 +45,9 @@
         "type": "github",
         "repo": "figma/mcp-server-guide",
         "path": "skills/figma-create-new-file",
-        "ref": "500e8738438ed1204eaf23e61280d872f47534fd"
+        "ref": "15599e7177ea9c605e750d865f28a5639ad6c891"
       },
-      "integrity": "sha256-b3a45dfd8af628262311cfd0bac8dcbc19affc6b873a9c8421a58707b725e349"
+      "integrity": "sha256-82e0a018692d3d009b5d2c83ecce9203a4ce7dfbdb98b7b13a4f7e5b11832bc2"
     },
     {
       "id": "figma-generate-design",
@@ -56,9 +56,20 @@
         "type": "github",
         "repo": "figma/mcp-server-guide",
         "path": "skills/figma-generate-design",
-        "ref": "500e8738438ed1204eaf23e61280d872f47534fd"
+        "ref": "15599e7177ea9c605e750d865f28a5639ad6c891"
       },
-      "integrity": "sha256-e24a1878e623df60e49dc2b83eda1fb576618ecdb599f7131aa1c468ec52f738"
+      "integrity": "sha256-c74d817d762e9c6e93f05a8b7edf76c9904271b79f31a1105174fa5a442fe39a"
+    },
+    {
+      "id": "figma-generate-diagram",
+      "vendoredPath": "skills/figma-generate-diagram",
+      "source": {
+        "type": "github",
+        "repo": "figma/mcp-server-guide",
+        "path": "skills/figma-generate-diagram",
+        "ref": "15599e7177ea9c605e750d865f28a5639ad6c891"
+      },
+      "integrity": "sha256-dadfa2d517c2f8caca8ffce5d0bbaa79ebcf85effea56e077642c3fca4b5c822"
     },
     {
       "id": "figma-generate-library",
@@ -67,9 +78,9 @@
         "type": "github",
         "repo": "figma/mcp-server-guide",
         "path": "skills/figma-generate-library",
-        "ref": "500e8738438ed1204eaf23e61280d872f47534fd"
+        "ref": "15599e7177ea9c605e750d865f28a5639ad6c891"
       },
-      "integrity": "sha256-c033109baf9efb58b1939c116efdcc0ed3fb010886b5f47702814d034610dc17"
+      "integrity": "sha256-9e5b88822a4158c92e211b935ff398c68c4ae7073fe01a7849549f4f09a05d2c"
     },
     {
       "id": "figma-use",
@@ -78,9 +89,31 @@
         "type": "github",
         "repo": "figma/mcp-server-guide",
         "path": "skills/figma-use",
-        "ref": "500e8738438ed1204eaf23e61280d872f47534fd"
+        "ref": "15599e7177ea9c605e750d865f28a5639ad6c891"
       },
-      "integrity": "sha256-acc22d53e4ef1f03f435e53f65a6b65f7785e109cdaad97a9d660e1f72c8da3f"
+      "integrity": "sha256-7be8f8e23f0f37a7a5b6759d24b9b36e3f6da7890de86d93273a622b1569b877"
+    },
+    {
+      "id": "figma-use-figjam",
+      "vendoredPath": "skills/figma-use-figjam",
+      "source": {
+        "type": "github",
+        "repo": "figma/mcp-server-guide",
+        "path": "skills/figma-use-figjam",
+        "ref": "15599e7177ea9c605e750d865f28a5639ad6c891"
+      },
+      "integrity": "sha256-713323558762a4a221ecdc0d025dd3adb358819ac91085d79ca0ac949bffe87f"
+    },
+    {
+      "id": "figma-use-slides",
+      "vendoredPath": "skills/figma-use-slides",
+      "source": {
+        "type": "github",
+        "repo": "figma/mcp-server-guide",
+        "path": "skills/figma-use-slides",
+        "ref": "15599e7177ea9c605e750d865f28a5639ad6c891"
+      },
+      "integrity": "sha256-b4d959da2774c0810f0bab7673bc75f7c525495a9ee880b7cde966dff71384fe"
     }
   ]
 }
