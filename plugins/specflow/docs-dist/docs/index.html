@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+
+    <title>Specflow — documentation</title>
+    <meta name="description" content="Specflow — enhanced spec-kit CLI with auto-chained workflow, review phase, and backlog. Distributed as a single native binary." />
+    <meta name="specflow-version" content="1.4.0" />
+
+    <link rel="canonical" href="https://specflow.makerlabs.dev/docs/" />
+    <link rel="alternate" type="text/markdown" href="/llms.txt" />
+    <link rel="stylesheet" href="/styles.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <header class="site-header">
+      <a href="/" class="brand" aria-label="Specflow home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">Specflow</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/">Home</a>
+        <a href="https://github.com/mkrlabs/specflow">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <section>
+        <p class="doc-header">
+          ← <a href="/">Specflow home</a> · Documentation
+        </p>
+        <article class="markdown-body">
+<h1 id="specflow"><a class="anchor" aria-hidden="true" tabindex="-1" href="#specflow"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Specflow</h1>
+<blockquote>
+<p>Specflow is an enhanced fork of the
+<a href="https://github.com/github/spec-kit" rel="noopener noreferrer"><code>specify</code> CLI from GitHub Spec Kit</a>, distributed as a single
+native binary (no Python prerequisites). It scaffolds the files your AI coding harness consumes —
+SpecKit slash-commands, spec / plan / tasks templates, a constitution, agents, and a backlog
+system — directly into an existing project, in one command.</p>
+</blockquote>
+<p>Specflow does <strong>not</strong> call any LLM and does <strong>not</strong> orchestrate any agent at runtime. Your AI
+harness (Claude Code, Cursor, Codex, Gemini CLI, GitHub Copilot CLI, Windsurf, OpenCode,
+Antigravity) is what reads the generated files and acts on them.</p>
+<p>This page is the canonical documentation. The same content is available as raw Markdown at
+<a href="/llms.txt" rel="noopener noreferrer"><code>/llms.txt</code></a> for LLM consumption — see <a href="https://llmstxt.org/" rel="noopener noreferrer">llmstxt.org</a> for the
+convention.</p>
+<h2 id="install"><a class="anchor" aria-hidden="true" tabindex="-1" href="#install"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Install</h2>
+<p>The fastest path on macOS or Linux:</p>
+<pre><code>curl -fsSL https://raw.githubusercontent.com/mkrlabs/specflow/main/install.sh | bash</code></pre><p>The installer downloads the platform binary, verifies the SHA256 checksum, and places it in
+<code>/usr/local/bin</code> (auto-elevating via <code>sudo</code> if needed). On non-writable prefixes with no terminal it
+falls back to <code>~/.local/bin</code>.</p>
+<p>Pin a specific version:</p>
+<pre><code>curl -fsSL https://.../install.sh | VERSION=v0.7.1 bash</code></pre><p>Custom install dir:</p>
+<pre><code>curl -fsSL https://.../install.sh | PREFIX=$HOME/.local/bin bash</code></pre><p>Or via Homebrew (macOS / Linux):</p>
+<pre><code>brew tap mkrlabs/tap
+brew install specflow</code></pre><p>Manual download: pick the binary for your OS/arch from
+<a href="https://github.com/mkrlabs/specflow/releases" rel="noopener noreferrer">GitHub Releases</a>, <code>chmod +x</code>, place it on your
+<code>$PATH</code>. On macOS clear the quarantine attribute with
+<code>xattr -d com.apple.quarantine /path/to/specflow</code>.</p>
+<h3 id="install-the-claude-code-plugin"><a class="anchor" aria-hidden="true" tabindex="-1" href="#install-the-claude-code-plugin"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Install the Claude Code plugin</h3>
+<p>If you use Claude Code and want Specflow's slash-commands and sub-agents available across <strong>all your
+projects</strong> without running <code>specflow init</code>, install the Claude Code plugin:</p>
+<pre><code>/plugin install mkrlabs/specflow-plugin</code></pre><p>The plugin ships the same 23 assets the binary scaffolds — the consolidated <code>specflow</code> router skill
+(with 11 phase docs, the <code>specflow-review</code> auto-invoke alias, and the deprecated <code>specflow-auto</code>
+skill), and 9 sub-agents — but at user scope, versioned, and auto-updated via <code>/plugin update</code>.
+Because the plugin's slash-commands are namespaced and the consolidated router itself is named
+<code>specflow</code>, you'll see a double-prefix at the call site:</p>
+<pre><code>/specflow-plugin:specflow specify "&lt;feature description&gt;"
+/specflow-plugin:specflow plan
+/specflow-plugin:specflow specify "&lt;feature description&gt;"</code></pre><p>Slightly verbose, but unambiguous. If you scaffold project-local with <code>specflow init</code>, you get the
+shorter <code>/specflow specify "..."</code> form.</p>
+<p>To test a local checkout of the plugin without publishing:</p>
+<pre><code>claude --plugin-dir /path/to/specflow/plugin</code></pre><p><strong>Plugin vs <code>specflow init</code></strong> — they complement each other:</p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Binary (<code>specflow init</code>)</th>
+<th>Plugin (<code>/plugin install</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Scope</td>
+<td>Project-local (<code>.claude/</code>)</td>
+<td>User-scope (all projects)</td>
+</tr>
+<tr>
+<td>Slash-command style</td>
+<td><code>/specflow specify</code> (short)</td>
+<td><code>/specflow-plugin:specflow specify</code></td>
+</tr>
+<tr>
+<td>Customizable per-project</td>
+<td>Yes</td>
+<td>No (user-scope, shared)</td>
+</tr>
+<tr>
+<td>Backlog skill, hooks, <code>.specflow/</code></td>
+<td>Yes</td>
+<td>No (project-stateful — binary-only)</td>
+</tr>
+<tr>
+<td>Kept in sync</td>
+<td><code>specflow upgrade</code></td>
+<td><code>/plugin update</code></td>
+</tr>
+</tbody></table>
+<p>Most teams use both: the plugin provides discoverability and keeps the agents up-to-date across all
+projects; <code>specflow init</code> provides the short slash-commands and project-local customization.</p>
+<h2 id="quickstart"><a class="anchor" aria-hidden="true" tabindex="-1" href="#quickstart"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Quickstart</h2>
+<h3 id="create-a-new-project"><a class="anchor" aria-hidden="true" tabindex="-1" href="#create-a-new-project"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Create a new project</h3>
+<pre><code>specflow init my-project
+cd my-project</code></pre><p>This scaffolds a tree configured for the <strong>Claude Code</strong> harness by default (<code>.claude/</code>,
+<code>.specflow/</code>, <code>AGENTS.md</code>, <code>.specflow/backlog.md</code>, …). Open the project in your harness — that's
+where you'll run the rest.</p>
+<h3 id="step-1-after-init-run-specflow-constitution"><a class="anchor" aria-hidden="true" tabindex="-1" href="#step-1-after-init-run-specflow-constitution"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Step 1 after <code>init</code>: run <code>/specflow constitution</code></h3>
+<p><code>/specflow constitution</code> is the expected first action after <code>specflow init</code>. It scaffolds your
+project's guiding principles (architecture, quality gates, ways of working) into
+<code>.specflow/memory/constitution.md</code> so the rest of the pipeline (<code>/specflow specify</code>,
+<code>/specflow plan</code>, <code>/specflow tasks</code>, <code>/specflow implement</code>) has something to anchor on.</p>
+<p>The generated constitution comes pre-populated with four opinionated baseline blocks (all
+user-tunable): <strong>Engineering methodology</strong> (TDD / DDD / SOLID-DRY-KISS-YAGNI /
+Boy-Scout-escalation), <strong>Architecture layers</strong> (hexagonal default: <code>domain/</code> / <code>application/</code> /
+<code>infrastructure/</code> / <code>presentation/</code>), <strong>Back-end patterns</strong> (Repository, service objects, DI through
+constructors, thin controllers, errors as domain types, pure domain), and <strong>Front-end patterns</strong>
+(view/logic separation, no business rules in templates, smart vs dumb components, single source of
+truth for state, typed API client, accessibility mandatory). New projects via <code>specflow init</code>
+inherit all four blocks automatically. <code>specflow upgrade</code> delivers updated agents and skills but
+does <strong>not</strong> rewrite an existing constitution — to adopt the new baselines in an existing project,
+rebase your constitution manually.</p>
+<p>Refine the generated constitution and the root <code>AGENTS.md</code> for your stack, then move on to
+<code>/specflow specify "&lt;feature description&gt;"</code> for your first feature.</p>
+<h3 id="add-specflow-to-an-existing-project"><a class="anchor" aria-hidden="true" tabindex="-1" href="#add-specflow-to-an-existing-project"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Add Specflow to an existing project</h3>
+<pre><code>cd my-existing-project
+specflow init --here</code></pre><p>Specflow merges its <code>.gitignore</code> block into your existing file (non-destructively, fenced with
+<code># --- Specflow: gitignore ---</code> markers). Other specflow-managed files use upgrade-aware semantics:
+if you customize a generated file, <code>specflow upgrade</code> will preserve it unless you pass <code>--force</code>.</p>
+<h3 id="whats-in-specflowinstalledlock-and-should-i-commit-it"><a class="anchor" aria-hidden="true" tabindex="-1" href="#whats-in-specflowinstalledlock-and-should-i-commit-it"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>What's in <code>.specflow/installed.lock</code> and should I commit it?</h3>
+<p><code>specflow init</code> writes a small YAML file at <code>.specflow/installed.lock</code>. It records the harness you
+chose, the templates version installed, and a SHA-256 + install timestamp for every file Specflow
+emitted. It contains no secrets — only file paths, content hashes, and version strings.</p>
+<p><strong>Commit it.</strong> <code>specflow upgrade</code> reads this lock to know which harness to map templates to, to
+detect files you have customized (so it doesn't clobber them), and to drop orphaned files that are
+no longer part of the bundle. <code>specflow check --project</code> also surfaces the harness, templates
+version, and backlog backend from this file (and warns when <code>backlog-config.yml</code> has empty required
+fields for the github / gitlab backends). Without the lock, both commands degrade gracefully but
+cannot do their real job — <code>specflow upgrade</code> will refuse and ask you to re-run
+<code>specflow init --here --force</code> to rebuild the lock from scratch.</p>
+<h3 id="pick-a-different-harness"><a class="anchor" aria-hidden="true" tabindex="-1" href="#pick-a-different-harness"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Pick a different harness</h3>
+<pre><code>specflow init my-project --ai cursor
+specflow init my-project --ai antigravity
+specflow init my-project --ai gemini
+# … etc.</code></pre><p>Eight harness targets are supported: <code>claude</code> (default), <code>cursor</code>, <code>codex</code>, <code>gemini</code>, <code>windsurf</code>,
+<code>copilot</code>, <code>opencode</code>, <code>antigravity</code>. Each emits files in the convention that harness expects.</p>
+<h3 id="pick-a-backlog-backend"><a class="anchor" aria-hidden="true" tabindex="-1" href="#pick-a-backlog-backend"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Pick a backlog backend</h3>
+<pre><code>specflow init my-project --backlog github
+specflow init my-project --backlog gitlab
+specflow init my-project --backlog local      # default</code></pre><p>Three backends are supported: <code>local</code> (default), <code>github</code>, <code>gitlab</code>. See
+<a href="#3-backlog-as-product-source-of-truth">Backlog as product source of truth</a> for what each one stores
+and how the PO agent talks to it.</p>
+<h4 id="pre-fill-the-backlog-config-with---backlog-url"><a class="anchor" aria-hidden="true" tabindex="-1" href="#pre-fill-the-backlog-config-with---backlog-url"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Pre-fill the backlog config with <code>--backlog-url</code></h4>
+<p>When the chosen backend is <code>github</code> or <code>gitlab</code>, <code>specflow init</code> can take the project's Kanban URL
+up front and write a fully-populated <code>.specflow/backlog-config.yml</code> — no manual edit needed before
+running <code>/backlog</code>. Pass the project URL via <code>--backlog-url</code>:</p>
+<pre><code># GitHub org-owned project
+specflow init --here --ai claude --backlog github \
+  --backlog-url https://github.com/orgs/myorg/projects/1
+
+# GitHub user-owned project
+specflow init --here --ai claude --backlog github \
+  --backlog-url https://github.com/users/alice/projects/12
+
+# GitLab (gitlab.com or self-hosted)
+specflow init --here --ai claude --backlog gitlab \
+  --backlog-url https://gitlab.com/mygroup/myproject</code></pre><p>Three URL formats are supported:</p>
+<ul>
+<li>GitHub org-owned: <code>https://github.com/orgs/&lt;org&gt;/projects/&lt;N&gt;</code></li>
+<li>GitHub user-owned: <code>https://github.com/users/&lt;user&gt;/projects/&lt;N&gt;</code></li>
+<li>GitLab project: <code>https://&lt;host&gt;/&lt;group&gt;/&lt;project&gt;</code></li>
+</ul>
+<p>For GitHub, the <code>repo:</code> field of the populated config is derived from <code>git remote get-url origin</code>
+(both HTTPS and SSH remote shapes are recognised). Pass <code>--backlog-repo &lt;owner&gt;/&lt;name&gt;</code> to override
+that derivation when the project lives across multiple repos or the local remote isn't <code>origin</code>.</p>
+<p>Without <code>--backlog-url</code> on a TTY, <code>specflow init</code> interactively prompts for the URL after the
+backend picker. <strong>In non-TTY mode (CI / scripted setup) <code>--backlog-url</code> is required when <code>--backlog</code>
+is <code>github</code> or <code>gitlab</code></strong> — omitting it exits with code <code>2</code> and a clear error message. The
+non-clobber invariant still holds: re-running <code>init</code> against a project with an existing
+<code>backlog-config.yml</code> does NOT overwrite it.</p>
+<h3 id="run-init-non-interactively-ci--scripts"><a class="anchor" aria-hidden="true" tabindex="-1" href="#run-init-non-interactively-ci--scripts"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Run <code>init</code> non-interactively (CI / scripts)</h3>
+<p>When you pass both <code>--ai</code> and <code>--backlog</code> (and <code>--backlog-url</code> when the backend is remote), no
+interactive prompt is shown — <code>specflow init</code> runs fully unattended, which is what you want in CI or
+scripted setup:</p>
+<pre><code># Local backend — zero-config, just the two flags
+specflow init my-project --ai claude --backlog local
+
+# GitHub backend — --backlog-url is required in non-TTY mode
+specflow init my-project --ai claude --backlog github \
+  --backlog-url https://github.com/orgs/myorg/projects/1
+
+# GitLab backend — same shape
+specflow init --here --no-git --ai cursor --backlog gitlab \
+  --backlog-url https://gitlab.com/mygroup/myproject</code></pre><p>Without those flags, <code>specflow init</code> shows an arrow-key picker (↑/↓ to move, space/enter to select)
+when stdin is a TTY, and falls back to a numeric prompt — or the defaults — when stdin is piped.</p>
+<h3 id="pick-a-versioning-scheme"><a class="anchor" aria-hidden="true" tabindex="-1" href="#pick-a-versioning-scheme"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Pick a versioning scheme</h3>
+<p><code>specflow init</code> asks which scheme to use for the bundled <code>/specflow tag-version</code> and
+<code>/specflow release-version</code> commands. Two options:</p>
+<ul>
+<li><strong>SemVer</strong> (<code>v1.2.3</code>) — recommended for libraries / SDKs whose consumers reason about breaking
+changes by version number.</li>
+<li><strong>Date-based</strong> (<code>vYY.M.Da</code>) — recommended for apps / SaaS / deployed products where the version
+number is just a release identifier. No major/minor/patch guesswork; the letter suffix handles
+same-day re-tags.</li>
+</ul>
+<p>Specflow detects whether the project looks like a library (<code>package.json</code> <code>exports</code> /
+<code>pyproject.toml</code> <code>[project]</code> / <code>Cargo.toml</code> <code>[lib]</code> / <code>composer.json</code> <code>type=library</code>) and
+pre-selects a sensible default — the user can always override at the picker. The choice is persisted
+by <strong>rewriting the scaffolded skill</strong> itself (the unchosen scheme's blocks are stripped at scaffold
+time), so the on-disk <code>.specflow/scripts/release/tag.sh</code> only contains the chosen scheme's logic. To
+switch schemes later, re-run <code>specflow init</code> and pick the other option.</p>
+<p>Pass <code>--scheme semver|date</code> to bypass the picker in non-TTY mode.</p>
+<h3 id="other-commands"><a class="anchor" aria-hidden="true" tabindex="-1" href="#other-commands"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Other commands</h3>
+<pre><code>specflow check                    # diagnose your environment
+specflow check --project          # also diagnose the current specflow project
+                                  #   (warns if the plugin was uninstalled after migration)
+specflow upgrade                  # update templates to the binary's version
+                                  #   (when specflow-plugin is installed + harness=claude:
+                                  #    vanilla agent/command files are auto-migrated to the plugin)
+specflow upgrade --dry-run        # preview the upgrade plan
+specflow upgrade --force          # apply destructive changes (backs up customizations)
+specflow self-update              # upgrade the binary itself
+specflow self-update --check      # only report whether an update is available
+specflow --version                # print version
+specflow --help                   # full usage</code></pre><h3 id="bundled-tag--release-commands"><a class="anchor" aria-hidden="true" tabindex="-1" href="#bundled-tag--release-commands"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Bundled tag + release commands</h3>
+<p>Every scaffolded project ships two router commands under <code>/specflow</code>:</p>
+<ul>
+<li><strong><code>/specflow tag-version</code></strong> — creates an annotated git tag using the project's versioning scheme.
+Bumps automatically (latest tag → next). For SemVer, <code>--bump major|minor|patch</code> controls the
+direction (default <code>patch</code>); for date-based, the letter suffix increments. Pushes to <code>origin</code> if a
+remote is configured, else stays local. Pass <code>--no-push</code> to skip.</li>
+<li><strong><code>/specflow release-version</code></strong> — generates <strong>categorized release notes</strong> for a tag (default:
+latest) covering every commit since the previous tag. The output is the release-body Markdown, one
+section per non-empty Conventional Commits bucket (Features / Bug Fixes / Performance / Refactors
+/ Documentation / Tests / Build &amp; CI / Chores / Style / Other). Pipe the output into
+<code>gh release create</code> / <code>glab release create</code> to publish.</li>
+</ul>
+<p>The scripts live at <code>.specflow/scripts/release/{tag,release}.sh</code> — the same path across all 8
+harnesses.</p>
+<p>For <strong>GitHub</strong>-hosted projects, the bundled <code>release-github.sh</code> wrapper is the one-command path:</p>
+<pre><code>bash .specflow/scripts/release/release-github.sh           # latest tag, auto-baseline, publish
+bash .specflow/scripts/release/release-github.sh --draft   # create as draft</code></pre><p>For <strong>GitLab</strong>-hosted projects, <code>release-gitlab.sh</code> mirrors the same contract:</p>
+<pre><code>bash .specflow/scripts/release/release-gitlab.sh           # latest tag
+bash .specflow/scripts/release/release-gitlab.sh v1.2.3    # specific tag</code></pre><p>Both wrappers compute the baseline as <strong>the previous tag with a published release attached</strong> (not
+the previous tag by date) — tags pushed without a release are "subsumed" and their commits land in
+this release, with the subsumed tag names listed inline. They push the tag to <code>origin</code> if needed,
+then call <code>gh release create</code> / <code>glab release create</code>. Idempotent: a second run against an
+already-released tag exits 0 with an explanatory message.</p>
+<p>For <strong>local-only</strong> projects (no remote, or you just want a Markdown artifact), the bundled
+<code>release-local.sh</code> wrapper writes the categorized body to a file:</p>
+<pre><code>bash .specflow/scripts/release/release-local.sh             # latest tag → RELEASE_NOTES_&lt;tag&gt;.md
+bash .specflow/scripts/release/release-local.sh --out NOTES.md v1.2.3</code></pre><p>No remote API calls, no auth — paste the output into any release UI, attach to a deploy email, or
+pipe to a custom publisher.</p>
+<h2 id="available-harnesses"><a class="anchor" aria-hidden="true" tabindex="-1" href="#available-harnesses"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Available harnesses</h2>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Display name</th>
+<th>Output root</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>claude</code></td>
+<td>Claude Code</td>
+<td><code>.claude/</code></td>
+</tr>
+<tr>
+<td><code>cursor</code></td>
+<td>Cursor</td>
+<td><code>.cursor/</code></td>
+</tr>
+<tr>
+<td><code>codex</code></td>
+<td>Codex CLI</td>
+<td><code>.codex/</code>, <code>.agents/</code></td>
+</tr>
+<tr>
+<td><code>gemini</code></td>
+<td>Gemini CLI</td>
+<td><code>.gemini/</code></td>
+</tr>
+<tr>
+<td><code>windsurf</code></td>
+<td>Windsurf</td>
+<td><code>.windsurf/</code></td>
+</tr>
+<tr>
+<td><code>copilot</code></td>
+<td>GitHub Copilot CLI</td>
+<td><code>.github/instructions/</code></td>
+</tr>
+<tr>
+<td><code>opencode</code></td>
+<td>OpenCode</td>
+<td><code>.opencode/</code></td>
+</tr>
+<tr>
+<td><code>antigravity</code></td>
+<td>Antigravity</td>
+<td><code>.agent/</code></td>
+</tr>
+</tbody></table>
+<p>All harnesses share the same source-of-truth content in <code>templates/core/</code>. The per-harness adapters
+in <code>src/infrastructure/harness/</code> map that core bundle to each harness's directory layout and
+frontmatter conventions.</p>
+<p>Some harnesses also ship harness-specific helper files alongside the core scaffold:</p>
+<ul>
+<li><strong>Claude</strong> — <code>.claude/CLAUDE.md</code> (harness reference, including <code>/goal</code>, <code>/loop</code>, and
+<code>claude agents</code> usage notes) + <code>.claude/loop.md</code> (default prompt for <code>/loop</code>, Claude's recurring
+periodic-maintenance feature).</li>
+<li><strong>Codex</strong> — <code>.codex/AGENTS.md</code> (harness reference) + <code>.codex/goal.md</code> (default prompt for <code>/goal</code>,
+Codex's experimental one-shot long-horizon feature; enable via <code>goals = true</code> under <code>[features]</code>
+in <code>config.toml</code>).</li>
+</ul>
+<h2 id="what-makes-specflow-different-from-upstream-spec-kit"><a class="anchor" aria-hidden="true" tabindex="-1" href="#what-makes-specflow-different-from-upstream-spec-kit"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>What makes Specflow different from upstream Spec Kit</h2>
+<p>Specflow is a fork of the official <code>specify</code> CLI with the following additions:</p>
+<h3 id="1-auto-chained-pipeline"><a class="anchor" aria-hidden="true" tabindex="-1" href="#1-auto-chained-pipeline"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>1. Auto-chained pipeline</h3>
+<p>The generated <code>specify</code> skill chains <code>clarify → plan → tasks → analyze → implement → review → merge</code>
+in a single session. Upstream stops at every step and asks the human to invoke the next one.
+Specflow only stops twice: when clarification is genuinely required, and once before merging.</p>
+<p>The chain is invoked through the bundled <code>/specflow</code> skill:</p>
+<pre><code>/specflow specify "&lt;feature description&gt;"</code></pre><p>Two checkpoints inside the chain:</p>
+<ul>
+<li><strong>STOP #1 — clarify</strong> runs after <code>clarify</code>. If <code>spec.md</code> still has <code>[NEEDS CLARIFICATION]</code>
+markers, the model surfaces the top 3 questions and waits. Once you answer, the chain resumes
+automatically. If there are no markers, the chain continues silently.</li>
+<li><strong>STOP #2 — pre-merge</strong> runs after <code>review</code>. The model summarises the work (files changed, tests,
+open risks, business outcome) and asks <code>Ready to merge?</code> before invoking <code>merge</code>. Reply <code>yes</code> to
+finish.</li>
+</ul>
+<h4 id="linking-a-feature-to-a-backlog-issue"><a class="anchor" aria-hidden="true" tabindex="-1" href="#linking-a-feature-to-a-backlog-issue"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Linking a feature to a backlog issue</h4>
+<p>Pass <code>--issue &lt;id&gt;</code> to <code>/specflow specify</code> (or to the bundled <code>create-new-feature.sh</code>) to record the
+originating backlog issue in <code>.specflow/feature.json</code>:</p>
+<pre><code>/specflow specify "Fix the off-by-one in pagination" --issue 42</code></pre><p>After <code>/specflow merge</code> fast-forwards the branch onto <code>main</code> and you push, the merge phase reads
+<code>feature.json.linked_issue</code>, runs <code>cascade-check.sh</code> (github / gitlab) to confirm no sub-issues
+block the close, asks <code>Close issue #42 on the board now? (yes/no)</code>, and on <code>yes</code> flips the project
+column to <code>Done</code> via <code>move.sh</code> then dispatches the <code>product-owner</code> agent to post a close comment
+with the merged commit range and <code>gh issue close --reason completed</code>. The board stays in sync with
+<code>main</code> instead of drifting.</p>
+<p><code>--issue</code> is opt-in; existing feature trees without the field skip the auto-close silently.</p>
+<p>To opt out of the chain entirely (run only <code>specify</code> and stop):</p>
+<pre><code>/specflow specify --manual "&lt;feature description&gt;"</code></pre><h4 id="mid-chain-re-entry"><a class="anchor" aria-hidden="true" tabindex="-1" href="#mid-chain-re-entry"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Mid-chain re-entry</h4>
+<p>Any phase other than <code>specify</code> can also enter the chain when invoked mid-flow — useful for two real
+workflows:</p>
+<ul>
+<li><strong>Manual review between early phases</strong> — read <code>spec.md</code> after <code>specify</code> lands, then
+<code>/specflow clarify N</code> resumes the chain through <code>plan → tasks → … → STOP #2</code>.</li>
+<li><strong>Context-budget recovery</strong> — open a fresh session after compaction and run
+<code>/specflow implement N</code> to pick up the tail (<code>→ review → STOP #2</code>).</li>
+</ul>
+<p>The default is <strong>context-aware</strong>: if downstream artefacts under <code>.specflow/specs/&lt;feature&gt;/</code> are
+missing, the chain fires; if they exist, the invocation is treated as a single-phase re-run (so
+regenerating <code>plan.md</code> doesn't accidentally cascade through the rest). Two explicit overrides when
+the default guesses wrong:</p>
+<ul>
+<li><code>/specflow &lt;phase&gt; N --continue</code> — force the chain regardless of artefact state.</li>
+<li><code>/specflow &lt;phase&gt; N --once</code> — force one-shot regardless.</li>
+</ul>
+<p>The <code>/specflow-auto</code> slash command is kept for one release as a deprecation alias and will be
+removed in the next major version.</p>
+<h3 id="2-review-phase-post-implement"><a class="anchor" aria-hidden="true" tabindex="-1" href="#2-review-phase-post-implement"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>2. <code>review</code> phase post-implement</h3>
+<p>After <code>implement</code>, the generated workflow runs a dedicated <code>review</code> phase that checks structure
+(architecture boundaries, silent error swallowing, leaked internal IDs, cache layering, test
+coverage) and the quality gates (format, lint, typecheck, tests). If <code>review</code> flags something, the
+loop is <code>implement → review → fix → re-review</code> — also automatic.</p>
+<h3 id="3-developer-agent-doctrine"><a class="anchor" aria-hidden="true" tabindex="-1" href="#3-developer-agent-doctrine"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>3. Developer agent doctrine</h3>
+<p>Every scaffold ships a <code>developer</code> agent that implements tasks from <code>tasks.md</code>. The agent operates
+under a strict doctrine that applies to every task, regardless of project stack:</p>
+<p><strong>Domain Model gate (NON-NEGOTIABLE)</strong> — before writing a single line of code, the developer reads
+the <code>## Domain Model</code> block in <code>spec.md</code> (spec path) or in the Product Owner's <code>/backlog brief</code>
+output (direct-implementation path). If the block is absent, empty, or still contains template
+placeholders, the agent halts and returns <code>BLOCKED</code> with reason
+<code>awaiting:product-owner-domain-brief</code>. The <code>implement</code> phase skill enforces the same gate — it reads
+the section at step 3 and surfaces the same BLOCKED report with a recommendation to run
+<code>/specflow clarify</code> first. The <code>clarify</code> phase cannot advance while the Domain Model is incomplete,
+and <code>specify</code> step 5.7 is responsible for populating the full block (Bounded context, Vocabulary,
+Entities, Value objects, Invariants, Out of scope) rather than just listing key entities.</p>
+<p><strong>Test-Driven Development (NON-NEGOTIABLE)</strong> — red → green → refactor on every implementation. No
+business logic ships untested. If the project has no test infrastructure, the developer bootstraps
+the language-idiomatic test runner (Vitest for TS/JS, Pytest for Python, JUnit for Java, <code>go test</code>
+for Go, <code>cargo test</code> for Rust, PHPUnit for PHP, RSpec for Ruby, etc.) as part of the task and
+records it explicitly in the <code>Decisions</code> block of the completion report.</p>
+<p><strong>Domain-Driven Design (NON-NEGOTIABLE)</strong> — every change respects the project's domain boundaries.
+Domain layer stays pure (no I/O, no framework). Application layer holds use cases and ports.
+Infrastructure layer holds adapters. Presentation talks only to use cases. Cross-bounded-context
+bleed-through is forbidden — split or use an anti-corruption layer.</p>
+<p><strong>Boy Scout Rule with escalation</strong> — small in-scope cleanups (≤ 1 file, ~15 lines of diff, no public
+API change) are done in the same PR and noted in <code>Decisions</code>. Larger out-of-scope cleanups are
+logged in a <code>Tech debt surfaced</code> block of the completion report rather than ballooning the PR. The
+Product Owner reads that block and opens a classified tech-debt ticket (<code>tech-debt</code> label, default
+Size XS/S, Priority P3, bumped to P2 on correctness/security risk) for each item.</p>
+<p><strong>SOLID / DRY / KISS / YAGNI</strong> — explicitly required. Framework-specific patterns (Repository, DI,
+React hooks, MVC controllers) come from the constitution's Back-end and Front-end pattern blocks.
+<strong>No silent catches</strong> — every <code>catch</code> either logs at ERROR/WARN or re-throws. <strong>In-code
+documentation</strong> — doc-comments on every function, method, or class encoding a business rule or
+non-obvious design decision, in the idiomatic format for the language.</p>
+<h3 id="4-backlog-as-product-source-of-truth"><a class="anchor" aria-hidden="true" tabindex="-1" href="#4-backlog-as-product-source-of-truth"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>4. Backlog as product source of truth</h3>
+<p>A Product Owner agent gates every mutation, and supports three backends:</p>
+<ul>
+<li><strong>Local Markdown</strong> (<code>--backlog local</code>, default) — index at <code>.specflow/backlog.md</code>, task files at
+<code>.specflow/backlog/NNN-slug.md</code> (typed frontmatter: id, title, category, priority, complexity,
+status, parent, depends_on, spec, tags, created). Sub-tasks reference their parent via
+<code>parent: "#NNN"</code>.</li>
+<li><strong>GitHub Issues + Projects</strong> (<code>--backlog github</code>) — the agent talks directly to the backend via
+<code>gh</code> CLI; epics use the native sub-issues API. Read paths use
+<code>gh issue list/view --json projectItems</code> (REST-ish CLI projection of Project V2 fields, ~1–2
+GraphQL points per call), and raw <code>gh api graphql</code> is reserved for the one operation with no CLI
+equivalent (<code>gh project item-edit</code>'s underlying <code>updateProjectV2ItemFieldValue</code> mutation). Keeps
+backlog grooming under the shared 5,000-points-per-hour GitHub API quota. No local mirror, no sync
+command — the remote is the source of truth.</li>
+<li><strong>GitLab Issues</strong> (<code>--backlog gitlab</code>) — the agent talks to GitLab via <code>glab</code> CLI. Status is
+tracked via scoped <code>Status::*</code> labels rather than a native column field; sub-tasks use a
+<code>parent::#NNN</code> scoped label (Free-tier compatible — native GitLab Epics are Premium-only).
+Otherwise the model mirrors the GitHub backend (no local mirror, no sync command).</li>
+</ul>
+<p>The user picks one backend per project. The chosen backend is recorded in <code>.specflow/installed.lock</code>
+so the PO knows which one to use without auto-detection.</p>
+<p><strong>Semantic label bootstrap.</strong> For GitHub and GitLab backends, <code>specflow init</code> scaffolds
+<code>.specflow/scripts/backlog/ensure-labels.sh</code>. Run it once to seed seven canonical labels —
+<code>security</code>, <code>refactor</code>, <code>docs</code>, <code>tech-debt</code>, <code>dx</code>, <code>performance</code>, <code>dependency</code> — into the remote
+repo. Idempotent; never edits or deletes existing labels. The GitHub default <code>bug</code> label is verified
+but never re-created. The full reference lives in <code>.specflow/LABELS.md</code> next to the install —
+including a guidance note for local backend users on tagging via task-file frontmatter.</p>
+<p><strong>Mandatory classification — every groomed item is sized, prioritised, typed, and labelled.</strong> The PO
+classifies every item it creates or clarifies along four axes — Size, Priority, Issue Type (<code>Task</code> /
+<code>Bug</code> / <code>Feature</code>), and at least one label — before the item is done; classification is a gate, not
+optional polish. On a GitHub project with native <code>Priority</code> / <code>Size</code> single-select fields and native
+Issue Types, the bundled
+<code>.specflow/scripts/backlog/set-field.sh &lt;issue&gt; &lt;Priority|Size|IssueType&gt; &lt;value&gt;</code> writes each to
+its native field or type — and the PO <strong>never</strong> also applies a <code>priority:*</code> / <code>size:*</code> / <code>type:*</code>
+label on an item that already carries the native value. Labels are a strict fallback for projects or
+orgs without the native field/type; they are not a peer signal. <code>set-field.sh</code> exit codes tell the
+caller which path applies: <code>0</code> = set, <code>10</code> = field/type absent (fall back to label), <code>11</code> = value
+unrecognised, <code>12</code> = issue not on the project / not in the repo. <code>detect-fields.sh</code> (run once per
+groom) emits the field/option IDs into env vars for case-insensitive matching. On GitLab the four
+axes are scoped labels via <code>glab</code>; on the local Markdown backend they live in task-file frontmatter.</p>
+<p><strong>Bounded context (soft fifth axis)</strong> — a <code>domain:&lt;context&gt;</code> label (e.g. <code>domain:checkout</code>) is
+optional on mono-domain projects but the <code>## Domain Model</code> block in every <code>/backlog brief</code> output is
+always mandatory. Items touching ≥ 2 bounded contexts automatically trigger the epic detection
+heuristic with reason "cross-bounded-context".</p>
+<p><strong><code>/backlog brief</code> — Domain Model is mandatory.</strong> Every brief the PO generates for a developer MUST
+include a <code>## Domain Model</code> block with: Bounded context, Vocabulary (ubiquitous language), Entities
+(with aggregate root flag), Value objects, Invariants, and Out of scope. A brief without this block
+is incomplete — the PO clarifies with the user before issuing it. If a <code>spec.md</code> is attached, the
+block is written into the spec too (the spec template carries the section).</p>
+<p><strong>Tech-debt intake protocol.</strong> When a developer's completion report carries a <code>Tech debt surfaced</code>
+block, the PO parses it, deduplicates against the current backlog, and opens one classified ticket
+per surfaced item: <code>tech-debt</code> label, default Size XS or S, Priority P3 (bumped to P2 when the item
+involves correctness or security risk). This is automatically triggered — no manual step required.</p>
+<p><strong>Epics &amp; sub-tasks.</strong> Big work that needs decomposition lives as a parent <strong>epic</strong> with one or more
+<strong>sub-tasks</strong>. The link mechanism differs per backend, but the contract is the same: parents cannot
+close while any child is still open.</p>
+<table>
+<thead>
+<tr>
+<th>Backend</th>
+<th>Parent → child link</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>local</td>
+<td><code>parent: "#NNN"</code> in the child's frontmatter, plus a <code>## Sub-tasks</code> cross-link in the parent file</td>
+</tr>
+<tr>
+<td>github</td>
+<td>Native sub-issues API — children render automatically under the parent's "Sub-issues progress" field on Project V2</td>
+</tr>
+<tr>
+<td>gitlab</td>
+<td>Scoped label <code>parent::#NNN</code> on the child (Free-tier compatible)</td>
+</tr>
+</tbody></table>
+<p>Create a child on any backend with the bundled <code>add.sh --parent &lt;num&gt;</code> flag — the script writes the
+link, attaches to the project/board, and refuses (exit 3) when the named parent doesn't exist:</p>
+<pre><code>.specflow/scripts/backlog/add.sh "Child title" "Child body" "" --parent 42</code></pre><p>The bundled <code>cascade-check.sh &lt;num&gt;</code> (github + gitlab) is the close gate — exits 11 with the open
+children listed when close is unsafe, exits 12 (informational) when the parent is already closed so
+callers don't issue a redundant <code>close</code> and 422, exits 3 when the parent doesn't exist, exits 0 when
+all children are closed. The PO runs it before <code>gh issue close</code> / <code>glab issue close</code>. The local
+backend uses an inline <code>grep</code> equivalent.</p>
+<p>The Product Owner agent <strong>proactively</strong> proposes epic decomposition during <code>/backlog add</code> and during
+grooming whenever a request crosses ≥2 subsystems, has more than 5 acceptance-criteria bullets, or
+carries trigger phrases like "break down", "phased", "rewrite", "end-to-end". Obvious splits get
+auto-created; ambiguous ones get a concrete sub-task list back as a question. You don't have to ask
+for the breakdown — the PO surfaces it on its own.</p>
+<h3 id="5-claude-code-plugin-distribution"><a class="anchor" aria-hidden="true" tabindex="-1" href="#5-claude-code-plugin-distribution"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>5. Claude Code plugin distribution</h3>
+<p>Specflow ships a first-class Claude Code plugin (<code>specflow-plugin</code>) available via the Claude Code
+marketplace:</p>
+<pre><code>/plugin install mkrlabs/specflow-plugin</code></pre><p>The plugin gives any Claude Code user instant access to the full Specflow slash-command suite and
+sub-agents — no binary, no <code>specflow init</code> required. The 24 plugin assets (the consolidated
+<code>specflow</code> router skill with 11 phase docs, the <code>specflow-review</code> auto-invoke alias, the deprecated
+<code>specflow-auto</code> alias, and 10 sub-agents) are namespaced under <code>/specflow-plugin:*</code> so they coexist
+with project-local copies without collision.</p>
+<p>When both the plugin and the binary are in use, <code>specflow upgrade</code> detects the plugin and
+auto-migrates vanilla on-disk agents and command files (backed up, then deleted — the plugin serves
+them going forward). <code>specflow check --project</code> warns when covered files are missing and the plugin
+is not installed, with a recovery hint.</p>
+<h3 id="6-bundled-specflow-expert-agent"><a class="anchor" aria-hidden="true" tabindex="-1" href="#6-bundled-specflow-expert-agent"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>6. Bundled <code>specflow-expert</code> agent</h3>
+<p>Every scaffold ships a <code>specflow-expert</code> agent that knows Specflow itself — its commands, harnesses,
+backlog backends, and what changed between releases. It auto-triggers on Specflow-related questions
+("how does specflow X", "what is /specflow Y", "quoi de neuf") so users on a Specflow-scaffolded
+project can ask the harness about the tool without copy-pasting docs. It uses a vendored knowledge
+snapshot for offline / deterministic answers and <code>WebFetch</code> against
+<a href="https://specflow.makerlabs.dev/llms.txt" rel="noopener noreferrer">https://specflow.makerlabs.dev/llms.txt</a> + the GitHub Releases API for live "what's new" queries.
+Manual dispatch via <code>/specflow-expert &lt;question&gt;</code> is also supported.</p>
+<p>The agent also handles <strong>bug reports</strong>: ask "report this as a bug" (or hit a Specflow failure) and
+it pre-fills a structured GitHub issue against <code>mkrlabs/specflow</code> with a 6-section template (Summary
+/ Repro / Observed / Expected / Environment / Logs), auto-populating the environment block from
+<code>.specflow/installed.lock</code> + <code>specflow --version</code> + <code>uname -srm</code>, scrubbing common token shapes
+(GitHub PATs, GitLab PATs, Anthropic / OpenAI keys, AWS access keys), and handing you a pre-filled
+<code>https://github.com/mkrlabs/specflow/issues/new?…</code> URL to review and submit. The agent never
+auto-submits — you always see the body before clicking.</p>
+<h3 id="7-bundled-security-auditor-agent--two-modes"><a class="anchor" aria-hidden="true" tabindex="-1" href="#7-bundled-security-auditor-agent--two-modes"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>7. Bundled <code>security-auditor</code> agent — two modes</h3>
+<p>Every scaffold also ships a <code>security-auditor</code> agent with two dispatch shapes:</p>
+<ol>
+<li><strong>PR review</strong> — spawned by the <code>review-coordinator</code> during <code>/specflow review</code>. Audits the diff
+against eight rules (secrets in source, input validation, authz, injection, path traversal, SSRF,
+silent catches, internal-ID exposure) and emits a <code>FINDING</code> / <code>VERDICT</code> report.</li>
+<li><strong>Alert triage</strong> — invoked by the maintainer's <code>/release</code> flow when the <code>security-preflight</code>
+workflow surfaces open GitHub-side alerts (secret-scanning, dependabot, code-scanning, private
+advisories). The agent decides per-alert: open a backlog ticket via the PO, dismiss via
+<code>gh api -X PATCH</code> with a documented <code>resolution=</code> reason, or escalate to the user.</li>
+</ol>
+<p>The triage mode is release-time only and uses a tightly-constrained <code>Bash</code> grant — only the three
+<code>gh api</code> alert-dismissal endpoints are permitted. End users never trigger this mode; PR review
+remains the user-facing path.</p>
+<h3 id="8-bundled-ui-ux-designer-agent"><a class="anchor" aria-hidden="true" tabindex="-1" href="#8-bundled-ui-ux-designer-agent"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>8. Bundled <code>ui-ux-designer</code> agent</h3>
+<p>Every scaffold also ships a <code>ui-ux-designer</code> agent that owns a single source of truth — the
+project's <code>DESIGN.md</code> — that every other agent consults to keep generated UI on-brand. Three modes
+auto-select from <code>DESIGN.md</code> state:</p>
+<ol>
+<li><strong>Discovery</strong> — when <code>DESIGN.md</code> is absent. The agent runs a 2-4 question interview (project +
+audience, visual mood, brand seed, optional stack hint) and writes a complete first <code>DESIGN.md</code>
+from a canonical template covering typography, palette (light + dark with WCAG-AA contrast
+rules), 4-point spacing scale, radius / shadow tokens, component primitives, and motion.</li>
+<li><strong>Edit</strong> — when <code>DESIGN.md</code> is present and the dispatch is a refactor request. The agent edits
+the spec in place with a one-line rationale per change and a Decision-log append.</li>
+<li><strong>Audit</strong> — when the dispatch contains the word <code>audit</code>. The agent scans
+<code>**/*.{tsx,jsx,vue, svelte,html,css,scss}</code> under <code>src/</code> for literal hex colours, off-system
+fonts, and off-grid spacing values, reports drift in a
+<code>| File | Line | Found | Expected token | Severity |</code> table, and emits <code>clean</code> / <code>drift_minor</code> /
+<code>drift_major</code>.</li>
+</ol>
+<p>The agent is <strong>manual-dispatch only</strong> (<code>disable-model-invocation: true</code>) — design decisions are
+intentional and the agent never auto-runs. It produces Markdown, never code; the developer agent is
+what translates <code>DESIGN.md</code> into a Tailwind theme, CSS vars, or component library. <code>DESIGN.md</code> is
+NOT scaffolded by <code>specflow init</code>; it materialises on the agent's first invocation when the user
+actually wants a design system, so backend-only and CLI-only projects don't carry stub spec files
+they never read.</p>
+<h2 id="design-principles"><a class="anchor" aria-hidden="true" tabindex="-1" href="#design-principles"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Design principles</h2>
+<ul>
+<li><strong>Agnostic of the user project's language</strong> — Python, TypeScript, Go, PHP, Rust… your project,
+your stack.</li>
+<li><strong>Agnostic of the LLM</strong> — Claude, OpenAI, Gemini, local models, anything your harness supports.</li>
+<li><strong>Agnostic of the AI harness</strong> — eight first-class targets today, with the same core content for
+all.</li>
+<li><strong>Agnostic of the backlog source</strong> — pick local Markdown or your remote tracker (GitHub Issues +
+Projects, GitLab Issues; Bitbucket planned). The PO agent talks to whichever you chose.</li>
+<li><strong>Single binary</strong> — distributed via <code>deno compile</code> for macOS arm64/x64, Linux arm64/x64, and
+Windows x64. No Python, no <code>pip</code>, no extra runtimes on the user's machine.</li>
+</ul>
+<h2 id="repository"><a class="anchor" aria-hidden="true" tabindex="-1" href="#repository"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Repository</h2>
+<p>Source, releases, and issue tracker:
+<strong><a href="https://github.com/mkrlabs/specflow" rel="noopener noreferrer">github.com/mkrlabs/specflow</a></strong>.</p>
+<p>The <code>AGENTS.md</code> file at the repo root is the canonical context document for any future Claude Code,
+Codex, or other agent session contributing to the project itself.</p>
+<h2 id="recent-releases"><a class="anchor" aria-hidden="true" tabindex="-1" href="#recent-releases"><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Recent releases</h2>
+<ul>
+<li><a href="https://github.com/mkrlabs/specflow/releases/tag/v1.4.0" rel="noopener noreferrer">v1.4.0</a> — Developer doctrine — TDD always, DDD by default, Boy-Scout escalation (#249)</li>
+<li><a href="https://github.com/mkrlabs/specflow/releases/tag/v1.3.1" rel="noopener noreferrer">v1.3.1</a> — Mandate in-code documentation in developer agent constitution (#247)</li>
+<li><a href="https://github.com/mkrlabs/specflow/releases/tag/v1.3.0" rel="noopener noreferrer">v1.3.0</a> — Mandatory grooming classification — Size, Priority, Issue Type, label (#246)</li>
+<li><a href="https://github.com/mkrlabs/specflow/releases/tag/v1.2.8" rel="noopener noreferrer">v1.2.8</a> — Give each bundled agent a distinct color (#238)</li>
+<li><a href="https://github.com/mkrlabs/specflow/releases/tag/v1.2.7" rel="noopener noreferrer">v1.2.7</a> — Bundle release-local.sh wrapper (#230 local-only mode) (#236)</li>
+</ul>
+
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Specflow
+        <a href="https://github.com/mkrlabs/specflow/releases/tag/v1.4.0">v1.4.0</a>
+        · <a href="/llms.txt">llms.txt</a>
+        · <a href="https://github.com/mkrlabs/specflow">github.com/mkrlabs/specflow</a>
+      </p>
+    </footer>
+  </body>
+</html>
